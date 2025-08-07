@@ -3,136 +3,268 @@
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  padding: 2rem;
-  background-color: #f3f2ef; /* LinkedIn light gray */
+  padding: 1rem;
+  background-color: #f7f9fa;
+  min-height: 100vh;
 }
 
-.createPostContainer {
+/* Create Post Card */
+.createPostCard {
+  width: 100%;
+  max-width: 600px;
+  background-color: white;
+  border: 1px solid #e1e8ed;
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+}
+
+.createPostHeader {
   display: flex;
   align-items: flex-start;
-  gap: 1rem;
-  padding: 1rem;
+  gap: 12px;
   width: 100%;
-  max-width: 720px;
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-  position: relative;
-  margin-bottom: 1rem;
-  border: 1px solid #ddd;
 }
 
-.createPostContainer:hover {
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-}
-
-.createPostContainer > textarea {
+.postTextarea {
   flex: 1;
-  resize: none;
-  padding: 0.75rem 1rem;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  font-size: 0.95rem;
-  font-family: inherit;
+  border: none;
   outline: none;
-  background: #f9f9f9;
-  min-height: 70px;
+  resize: none;
+  font-size: 20px;
+  font-family: inherit;
+  color: #14171a;
+  background: transparent;
+  min-height: 60px;
+  padding: 8px 0;
+  line-height: 1.4;
 }
 
-.createPostContainer > textarea:focus {
-  border-color: #0a66c2;
-  background-color: #fff;
-  box-shadow: 0 0 0 2px rgba(10, 102, 194, 0.2);
+.postTextarea::placeholder {
+  color: #657786;
 }
 
-.uploadButton {
-  position: absolute;
-  right: 1rem;
-  bottom: -14px;
-  padding: 0.5rem 1rem;
-  background-color: #0a66c2;
-  color: white;
-  font-size: 0.85rem;
-  border-radius: 20px;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: background 0.2s ease;
+.postActions {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
 }
 
-.uploadButton:hover {
-  background-color: #004182;
-}
-
-.Fab {
-  background-color: #eef3f8;
+.addButton {
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  background-color: #1d9bf0;
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background-color 0.2s;
 }
 
-.Fab:hover {
-  background-color: #dce6f1;
+.addButton:hover {
+  background-color: #1a91da;
 }
 
-.Fab > svg {
-  width: 20px;
-  height: 20px;
-  color: #0a66c2;
+.addButton svg {
+  width: 18px;
+  height: 18px;
 }
 
+.fileUploadLabel {
+  cursor: pointer;
+}
+
+.postButtonContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e1e8ed;
+}
+
+.postButton {
+  background-color: #1d9bf0;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.postButton:hover {
+  background-color: #1a91da;
+}
+
+/* User Profile Image */
 .userProfile {
-  height: 42px;
-  width: 42px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   object-fit: cover;
-  background-color: #ccc;
-  border: 2px solid #eee;
-}
-
-.postContainer {
-  width: 100%;
-  max-width: 720px;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.singleCard {
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 1rem;
-  display: flex;
-  gap: 1rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-}
-
-.singleCard_profileContainer {
   flex-shrink: 0;
 }
 
-.postBody {
+/* Feed Container */
+.feedContainer {
+  width: 100%;
+  max-width: 600px;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  flex-grow: 1;
+  gap: 1rem;
 }
 
-.postBody p {
+/* Post Card */
+.postCard {
+  background-color: white;
+  border: 1px solid #e1e8ed;
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s;
+}
+
+.postCard:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.postHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.userDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.username {
+  font-weight: 700;
+  font-size: 15px;
+  color: #14171a;
   margin: 0;
-  font-size: 0.95rem;
-  color: #333;
-  line-height: 1.5;
+  line-height: 1.3;
 }
 
-.postImage {
-  max-width: 100%;
-  border-radius: 10px;
-  margin-top: 0.5rem;
+.userHandle {
+  font-size: 15px;
+  color: #657786;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.deleteButton {
+  cursor: pointer;
+  color: #f91880;
+  width: 20px;
+  height: 20px;
+  transition: color 0.2s;
+}
+
+.deleteButton:hover {
+  color: #d01c5c;
+}
+
+.deleteButton svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Post Content */
+.postContent {
+  margin-left: 60px;
+  margin-bottom: 12px;
+}
+
+.postText {
+  font-size: 15px;
+  color: #14171a;
+  line-height: 1.4;
+  margin: 0 0 12px 0;
+}
+
+.postMedia {
+  width: 100%;
+  max-height: 400px;
   object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid #e1e8ed;
+}
+
+/* Post Footer */
+.postFooter {
+  margin-left: 60px;
+  padding-top: 8px;
+  border-top: 1px solid #e1e8ed;
+}
+
+.likeSection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #657786;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.likeSection:hover {
+  color: #f91880;
+}
+
+.likeSection svg {
+  width: 18px;
+  height: 18px;
+}
+
+.likeCount {
+  font-size: 13px;
+  font-weight: 400;
+}
+
+/* Loading State */
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  color: #657786;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .scrollContainer {
+    padding: 0.5rem;
+  }
+  
+  .createPostCard,
+  .feedContainer {
+    max-width: 100%;
+  }
+  
+  .postContent {
+    margin-left: 48px;
+  }
+  
+  .postFooter {
+    margin-left: 48px;
+  }
+  
+  .userProfile {
+    width: 40px;
+    height: 40px;
+  }
 }
