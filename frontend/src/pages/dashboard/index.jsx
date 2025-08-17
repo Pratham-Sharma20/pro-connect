@@ -1,5 +1,12 @@
 import { getAboutUSer, getAllUsers } from "@/config/redux/action/authAction";
-import { createPost, deletePost, getAllPosts } from "@/config/redux/action/postAction";
+import {
+  createPost,
+  deletePost,
+  getAllComments,
+  getAllPosts,
+  incrementPostLikes,
+  postComment,
+} from "@/config/redux/action/postAction";
 import DashboardLayout from "@/layout/dashboardLayout";
 import UserLayout from "@/layout/userLayout";
 import { useRouter } from "next/router";
@@ -7,6 +14,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./index.module.css";
 import { BASE_URL } from "@/config";
+import { resetPostId } from "@/config/redux/reducer/postReducer";
 
 export default function DashboardComponent() {
   const router = useRouter();
@@ -16,12 +24,13 @@ export default function DashboardComponent() {
 
   const [postContent, setPostContent] = useState("");
   const [fileContent, setFileContent] = useState();
+  const [commentText, setCommentText] = useState("");
 
   const handleUpload = async () => {
     await dispatch(createPost({ file: fileContent, body: postContent }));
     setPostContent("");
     setFileContent(null);
-    dispatch(getAllPosts())
+    dispatch(getAllPosts());
   };
 
   useEffect(() => {
@@ -55,7 +64,10 @@ export default function DashboardComponent() {
                   value={postContent}
                 />
                 <div className={styles.postActions}>
-                  <label htmlFor="fileUpload" className={styles.fileUploadLabel}>
+                  <label
+                    htmlFor="fileUpload"
+                    className={styles.fileUploadLabel}
+                  >
                     <div className={styles.addButton}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -104,16 +116,20 @@ export default function DashboardComponent() {
                           />
                         )}
                         <div className={styles.userDetails}>
-                          <p className={styles.username}>{post.userId.username}</p>
-                          <p className={styles.userHandle}>@{post.userId.username.toLowerCase()}</p>
+                          <p className={styles.username}>
+                            {post.userId.username}
+                          </p>
+                          <p className={styles.userHandle}>
+                            @{post.userId.username.toLowerCase()}
+                          </p>
                         </div>
                       </div>
                       {post.userId._id === authState.user.userId._id && (
-                        <div 
+                        <div
                           onClick={async () => {
                             await dispatch(deletePost({ post_id: post._id }));
                             await dispatch(getAllPosts());
-                          }} 
+                          }}
                           className={styles.deleteButton}
                         >
                           <svg
@@ -145,27 +161,135 @@ export default function DashboardComponent() {
                     </div>
 
                     <div className={styles.postFooter}>
-                      <div className={styles.likeSection}>
-                        <svg 
-                          xmlns="http://www.w3.org/2000/svg" 
-                          fill="none" 
-                          viewBox="0 0 24 24" 
-                          strokeWidth={1.5} 
+                      <div
+                        onClick={async () => {
+                          await dispatch(
+                            incrementPostLikes({ post_id: post._id })
+                          );
+                          dispatch(getAllPosts());
+                        }}
+                        className={styles.likeSection}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
                           stroke="currentColor"
                         >
-                          <path 
-                            strokeLinecap="round" 
-                            strokeLinejoin="round" 
-                            d="M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z" 
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z"
                           />
                         </svg>
                         <span className={styles.likeCount}>{post.likes}</span>
+                      </div>
+                      <div
+                        onClick={() => {
+                          dispatch(getAllComments({ post_id: post._id }));
+                        }}
+                        className={styles.commentSection}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="size-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z"
+                          />
+                        </svg>
+                        <span className={styles.commentCount}>
+                          {post.comments}
+                        </span>
+                      </div>
+                      <div
+                        onClick={() => {
+                          const text = encodeURIComponent(post.body);
+                          const url = encodeURIComponent("apnacollege.in");
+
+                          const twitterUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+
+                          window.open(twitterUrl, "_blank");
+                        }}
+                        className={styles.shareSection}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="size-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z"
+                          />
+                        </svg>
                       </div>
                     </div>
                   </div>
                 ))}
             </div>
           </div>
+
+          {postState.postId !== "" && (
+            <div
+              onClick={() => dispatch(resetPostId())}
+              className={styles.commentsContainer}
+            >
+              <div
+                onClick={(e) => e.stopPropagation()}
+                className={styles.allCommentsContainer}
+              >
+                {postState.comments.length === 0 && <h3>No Comments</h3>}
+
+                {postState.comments.length!==0 && 
+                    <div>
+                      {postState.comments.map((comment , index)=>{
+                        return(
+                          <div className={styles.singleComment} key={comment._id}>
+                            <img src={`${BASE_URL}/${comment.userId.profilePicture}`} alt="" />
+                            <div>
+                              <p style={{fontWeight:"bold" , fontSize:"1.2rem"}}>
+                                {comment.userId.name}
+                              </p>
+                              <p> @{comment.userId.username}</p>
+                            </div>
+                            </div>
+                        ) 
+                      })}
+                      </div>
+                  }
+
+                <div className={styles.postCommentContainer}>
+                  <input
+                    type="text"
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    placeholder="Comment"
+                  />
+                  <div
+                    onClick={async () => {
+                      await dispatch(postComment({ post_id: postState.postId, body: commentText }));
+                      await dispatch(getAllComments({ post_id: postState.postId }));
+                    }}
+                    className={styles.postCommentContainer_commentBtn}
+                  >
+                    <p>Comment</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </DashboardLayout>
       </UserLayout>
     );

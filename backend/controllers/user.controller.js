@@ -6,6 +6,7 @@ import bcrypt from "bcrypt";
 import crypto from "crypto";
 import PDFDocument from "pdfkit";
 import fs from "fs";
+import Comment from "../models/comments.models.js";
 
 const convertUserDatoToPdf = async (userData) => {
   const doc = new PDFDocument();
@@ -293,10 +294,27 @@ export const commentPost = async(req , res)=>{
     const comment = new Comment({
       userId: user._id,
       postId: post._id,
-      comment: commentBody,
+      body: commentBody,
     });
     await comment.save();
     return res.status(200).json({message: "Comment added successfully", comment}); 
+  }catch(err){
+    return res.status(500).json({message: err.message});
+  }
+}
+
+
+export const getUserProfileAndUserBasedOnUsername = async(req,res)=>{
+  const {username } = req.query;
+  try{
+    const user = await User.findOne({
+      username,
+    });
+    if(!user){
+      return res.status(404).json({message : "user not foun"});
+    }
+    const userProfile = await Profile.findOne({userId : user._id})
+    .populate('userId' , 'name username email profilePicture');
   }catch(err){
     return res.status(500).json({message: err.message});
   }

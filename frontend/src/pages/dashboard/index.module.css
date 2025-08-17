@@ -207,9 +207,12 @@
 
 /* Post Footer */
 .postFooter {
+  display: flex;
+  justify-content: space-between;
   margin-left: 60px;
   padding-top: 8px;
   border-top: 1px solid #e1e8ed;
+  cursor: pointer;
 }
 
 .likeSection {
@@ -219,6 +222,7 @@
   color: #657786;
   cursor: pointer;
   transition: color 0.2s;
+  gap : 0.75rem;
 }
 
 .likeSection:hover {
@@ -226,13 +230,56 @@
 }
 
 .likeSection svg {
-  width: 18px;
-  height: 18px;
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 .likeCount {
   font-size: 13px;
   font-weight: 400;
+}
+
+.commentSection{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #657786;
+  cursor: pointer;
+  transition: color 0.2s;
+  gap : 0.75rem;
+}
+
+.commentSection > svg{
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.commentSection:hover{
+  color : #f91880;
+}
+
+.commentCount{
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.shareSection{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #657786;
+  cursor: pointer;
+  transition: color 0.2s;
+  gap : 0.75rem;
+}
+
+.shareSection > svg{
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.shareSection:hover{
+  color : #f91880;
 }
 
 /* Loading State */
@@ -267,4 +314,61 @@
     width: 40px;
     height: 40px;
   }
+}
+
+.commentsContainer{
+  position: fixed;
+  width : 100vw;
+  height : 100vh;
+  top : 0;
+  left : 0;
+  z-index : 2;
+  background: rgba(0,0,0,0.7);
+  overflow: hidden;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+}
+.allCommentsContainer{
+  width : 40vw;
+  height : 80vh;
+  background: white;
+  border-radius: 10px;
+  position: relative;
+  padding : 1.4rem;
+}
+
+.postCommentContainer{
+  position: absolute;
+  bottom: 1.2rem;
+  left : 1.2rem;
+  width : 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap :1.2rem;
+}
+
+.postCommentContainer > input{
+  flex : 0.9;
+  padding-inline: 1.5rem;
+  padding-block : 1.2rem;
+  border : none;
+  background-color: rgb(228,228,228);
+  border-radius: 10px;
+  outline : none;
+}
+
+.postCommentContainer > input:focus{
+  border:1px solid silver;
+}
+
+.postCommentContainer_commentBtn{
+  flex : 0.1;
+  width : fit-content;
+  padding : 1.2rem;
+  background-color: orange;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
 }
