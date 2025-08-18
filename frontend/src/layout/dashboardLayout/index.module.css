@@ -17,6 +17,7 @@
     flex-direction: column;
     gap : 1.2rem;
     align-items: start;
+    border-right: 1px solid rgba(192, 192, 192, 0.452);
 
 }
 
@@ -42,3 +43,14 @@
     width: 1.4rem; 
     flex-shrink: 0;
 }
+
+.homeContainer_feedContainer{
+    padding-inline : 0.8rem;
+}
+
+.homeContainer_extraContainer{
+    border-left: 1px solid rgba(192, 192, 192, 0.452);
+    padding-left: 1.2rem;
+}
+
+

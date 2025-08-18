@@ -61,12 +61,12 @@ export default function DashboardLayout({ children }) {
 
           </div>
 
-          <div className="homeContainer_feedContainer">
+          <div className={styles.homeContainer_feedContainer}>
 
             {children}
         </div>
 
-        <div className="homeContainer_extraContainer">
+        <div className={styles.homeContainer_extraContainer}>
 
                 <h3>Top profiles for you</h3>
 

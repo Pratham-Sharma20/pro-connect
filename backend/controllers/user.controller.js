@@ -304,18 +304,23 @@ export const commentPost = async(req , res)=>{
 }
 
 
-export const getUserProfileAndUserBasedOnUsername = async(req,res)=>{
-  const {username } = req.query;
-  try{
-    const user = await User.findOne({
-      username,
-    });
-    if(!user){
-      return res.status(404).json({message : "user not foun"});
+export const getUserProfileAndUserBasedOnUsername = async (req, res) => {
+  const { username } = req.query;
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
-    const userProfile = await Profile.findOne({userId : user._id})
-    .populate('userId' , 'name username email profilePicture');
-  }catch(err){
-    return res.status(500).json({message: err.message});
+
+    const userProfile = await Profile.findOne({ userId: user._id })
+      .populate("userId", "name username email profilePicture");
+
+    if (!userProfile) {
+      return res.status(404).json({ message: "Profile not found" });
+    }
+
+    return res.status(200).json({ userProfile });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
   }
-}
+};
