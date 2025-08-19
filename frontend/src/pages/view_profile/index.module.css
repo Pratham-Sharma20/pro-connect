@@ -1,6 +1,6 @@
-.container{
-    padding: 1.3rem;
-    background: rgb(230,230,230);
+.container {
+  padding: 1.3rem;
+  background: rgb(230, 230, 230);
 }
 .backDropContainer {
   width: 100%;
@@ -8,7 +8,7 @@
   background: url("https://t4.ftcdn.net/jpg/06/31/31/59/360_F_631315988_3lFMZC4kDYijJJzsxNQivlotIAQGeHow.jpg");
   background-size: cover;
   background-repeat: no-repeat;
-  position : relative;
+  position: relative;
   border-radius: 20px;
 }
 .backDropContainer img {
@@ -22,6 +22,45 @@
   text-align: center;
 }
 
-.profileContainer_details{
-  padding-top :6.6rem;
+.profileContainer_details {
+  padding-top: 6.6rem;
 }
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+}
+
+.card_profileContainer {
+    display: flex;
+}
+
+.card_profileContainer > img {
+    width: 3.4rem;
+    height: auto;
+    height: 3.4rem;
+    object-fit: cover;
+}
+
+.connectBtn {
+    padding-inline: 0.8rem;
+    padding-block: 0.3rem;
+    background: rgba(3, 93, 183, 0.905);
+    outline: none;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.connectedButton {
+    padding-inline: 0.8rem;
+    padding-block: 0.3rem;
+    border: 1px solid;
+    outline: none;
+    color: rgba(3, 93, 183, 0.905);
+    border-radius: 10px;
+    cursor: pointer;
+}
+

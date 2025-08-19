@@ -78,3 +78,66 @@ export const getAllUsers = createAsyncThunk(
       }
   }
 )
+
+export const getConnectionRequest = createAsyncThunk(
+  "user/getConnectionRequest",
+  async (user, thunkAPI) => {
+    try {
+      const response = await clientServer.get("/user/getConnection_request", {
+        params: {
+          token: user.token,
+        },
+      });
+      return thunkAPI.fulfillWithValue(response.data.connections);
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response?.data || { message: "Error fetching connection requests" });
+    }
+  }
+);
+
+export const sendConnectionRequest = createAsyncThunk(
+  "user/sendConnectionRequest",
+  async (user, thunkAPI) => {
+    try {
+      const response = await clientServer.post("/user/send_connection_request", {
+        token: user.token,
+        connectionId: user.userId, // ✅ fixed: was user.user_id, matches your component now
+      });
+      return thunkAPI.fulfillWithValue(response.data);
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response?.data || { message: "Error sending connection request" });
+    }
+  }
+);
+
+export const getMyConnectionRequests = createAsyncThunk(
+  "user/getMyConnectionRequests",
+  async (user, thunkAPI) => {
+    try {
+      const response = await clientServer.get("/user/user_connection_requests", {
+        params: {
+          token: user.token,
+        },
+      });
+      return thunkAPI.fulfillWithValue(response.data.connections);
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response?.data || { message: "Error fetching my connection requests" });
+    }
+  }
+);
+
+export const acceptConnection = createAsyncThunk(
+  "user/acceptConnection",
+  async (user, thunkAPI) => {
+    try {
+      const response = await clientServer.post("/user/accept_connection_request", {
+        token: user.token,
+        connection_id: user.connectionId,
+        action_type: user.action,
+      });
+      return thunkAPI.fulfillWithValue(response.data);
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response?.data || { message: "Error accepting connection request" });
+    }
+  }
+);
