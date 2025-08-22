@@ -227,7 +227,7 @@ export const sendConnectionRequest = async (req, res) => {
 };
 
 export const getConnectionRequests = async (req, res) => {
-  const { token } = req.body;
+  const { token } = req.query;
   try {
     const user = await User.findOne({ token });
     if (!user) {

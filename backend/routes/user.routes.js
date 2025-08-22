@@ -27,4 +27,4 @@ router.route("/user/getConnection_request").get(getConnectionRequests);
 router.route("/user/user_connection_requests").get(whatAreMyConnections);
 router.route("/user/accept_connection_request").post(acceptConnectionRequest);
 router.route("/user/get_profile_based_on_username").get(getUserProfileAndUserBasedOnUsername);
-export default router;  
+export default router;

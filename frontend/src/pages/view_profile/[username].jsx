@@ -31,12 +31,17 @@ export default function ViewProfilePage({userProfile}) {
     setUserPosts(post);
   } , [postReducer.posts])
 
-  useEffect(()=>{
-    console.log(authState.connections , userProfile.userId._id)
-    if(authState.connections.some(user => user.connectionId._id === userProfile.userId._id)){
-      setIsCurrentUserInConnection(true)
-    }
-  } , [authState.connections])
+  useEffect(() => {
+  console.log("Connections:", authState?.connections, "ProfileId:", userProfile?.userId?._id);
+
+  if (authState?.connections?.length && userProfile?.userId?._id) {
+    const isConnected = authState.connections.some(
+      (user) => user?.connectionId?._id === userProfile.userId._id
+    );
+    console.log("Is current user in connection?", isConnected);
+    setIsCurrentUserInConnection(isConnected);
+  }
+}, [authState?.connections, userProfile?.userId?._id]);
 
   useEffect(()=>{
     getUsersPost();
