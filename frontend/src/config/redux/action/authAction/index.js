@@ -1,4 +1,3 @@
-
 import { clientServer } from "@/config";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
@@ -83,7 +82,7 @@ export const getConnectionRequest = createAsyncThunk(
   "user/getConnectionRequest",
   async (user, thunkAPI) => {
     try {
-      const response = await clientServer.get("/user/getConnection_request", {
+      const response = await clientServer.get("/user/user_connection_requests", {
         params: {
           token: user.token,
         },
@@ -101,7 +100,7 @@ export const sendConnectionRequest = createAsyncThunk(
     try {
       const response = await clientServer.post("/user/send_connection_request", {
         token: user.token,
-        connectionId: user.userId, // ✅ fixed: was user.user_id, matches your component now
+        connectionId: user.userId,
       });
       return thunkAPI.fulfillWithValue(response.data);
     } catch (err) {
@@ -114,7 +113,7 @@ export const getMyConnectionRequests = createAsyncThunk(
   "user/getMyConnectionRequests",
   async (user, thunkAPI) => {
     try {
-      const response = await clientServer.get("/user/user_connection_requests", {
+      const response = await clientServer.get("/user/getConnection_request", {
         params: {
           token: user.token,
         },
@@ -132,7 +131,7 @@ export const acceptConnection = createAsyncThunk(
     try {
       const response = await clientServer.post("/user/accept_connection_request", {
         token: user.token,
-        connection_id: user.connectionId,
+        requestId: user.requestId,
         action_type: user.action,
       });
       return thunkAPI.fulfillWithValue(response.data);

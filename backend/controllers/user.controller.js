@@ -8,28 +8,30 @@ import PDFDocument from "pdfkit";
 import fs from "fs";
 import Comment from "../models/comments.models.js";
 
-const convertUserDatoToPdf = async (userData) => {
-  const doc = new PDFDocument();
-  const outputpath = crypto.randomBytes(32).toString("hex") + ".pdf";
-  const stream = fs.createWriteStream("uploads/" + outputpath);
-  doc.pipe(stream);
-  doc.image(`uploads/${userData.userId.profilePicture}`, {
-    align: "center",
-    width: 100,
-  });
-  doc.fontSize(14).text(`Name : ${userData.userId.name}`);
-  doc.fontSize(14).text(`Username : ${userData.userId.username}`);
-  doc.fontSize(14).text(`Bio : ${userData.bio}`);
-  doc.fontSize(14).text(`Current position  : ${userData.currentPost}`);
-  doc.fontSize(14).text(`Past work : `);
-  userData.pastWork.forEach((work, index) => {
-    doc.fontSize(14).text(`Company name : ${work.company}`);
-    doc.fontSize(14).text(`Position : ${work.position}`);
-    doc.fontSize(14).text(`Years : ${work.years}`);
-  });
-  doc.end();
-  return outputpath;
-};
+const convertUserDataToPDF = async (userData) => {
+      const doc = new PDFDocument
+
+      const outputPath = crypto.randomBytes(16).toString("hex") + ".pdf";
+      const stream = fs.createWriteStream("uploads/" + outputPath);
+
+      doc.pipe(stream);
+
+      doc.image(`uploads/${userData.userId.profilePicture}`, {align: 'center', width: 100, marginbottom: "20px"});
+      doc.fontSize(14).text(`Name: ${userData.userId.name}`,);
+      doc.fontSize(14).text(`Username: ${userData.userId.username}`,);
+      doc.fontSize(14).text(`Email: ${userData.userId.email}`,); 
+      doc.fontSize(14).text(`Bio: ${userData.bio}`,);
+      doc.fontSize(14).text(`Current Position: ${userData.currentPost}`,);
+
+      doc.fontSize(14).text("Past Work : ")
+      userData.pastWork.forEach((work, index) => {
+          doc.fontSize(14).text(`Company: ${work.company}`);
+          doc.fontSize(14).text(`Position: ${work.position}`);
+          doc.fontSize(14).text(`Years: ${work.years}`);
+  })
+      doc.end();
+      return outputPath;
+  }
 
 export const register = async (req, res) => {
   try {
@@ -107,7 +109,7 @@ export const uploadProfilePicture = async (req, res) => {
 export const updateUserProfile = async (req, res) => {
   try {
     const { token, ...newUserData } = req.body;
-    const user = await User.find({ token: token });
+    const user = await User.findOne({ token: token });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -177,19 +179,16 @@ export const getAllUserProfiles = async (req, res) => {
   }
 };
 
-export const downloadProfile = async (req, res) => {
-  let user_id = req.query.id;
-  console.log("[downloadProfile] Received user ID:", user_id);
-  if (!user_id) {
-    return res.status(400).json({ message: "User ID is required" });
+export const downloadProfile = async(req,res)=>{
+      const user_id = req.query.id;
+      console.log(user_id);
+      // return res.json({"message" : "not implemented"});
+
+      const userPrfile = await Profile.findOne({userId: user_id}).populate('userId', 'name username email profilePicture');
+
+      let outputPath = await convertUserDataToPDF(userPrfile);
+      return res.json({outputPath});
   }
-  const userProfile = await Profile.findOne({ userId: user_id }).populate(
-    "userId",
-    "name username email profilePicture"
-  );
-  let outputpath = await convertUserDatoToPdf(userProfile);
-  return res.json({ message: outputpath });
-};
 
 export const sendConnectionRequest = async (req, res) => {
   const { token, connectionId } = req.body;
@@ -200,6 +199,11 @@ export const sendConnectionRequest = async (req, res) => {
     }
 
     const connectionUser = await User.findById(connectionId);
+
+    if (String(user._id) === String(connectionId)) {
+      return res.status(400).json({ message: "Cannot connect to yourself" });
+    }
+
     if (!connectionUser) {
       return res.status(404).json({ message: "Connection user not found" });
     }
@@ -216,7 +220,7 @@ export const sendConnectionRequest = async (req, res) => {
     const newConnection = new Connection({
       userId: user._id,
       connectionId: connectionUser._id,
-      status: "pending", // added field for clarity
+      status: "pending",
     });
 
     await newConnection.save();
@@ -235,17 +239,18 @@ export const getConnectionRequests = async (req, res) => {
     }
 
     // Fetch requests received by the user
-    const connections = await Connection.find({ connectionId: user._id })
-      .populate("userId", "name username email profilePicture");
+    const connections = await Connection.find({ connectionId: user._id , status: "pending" })
+      .populate("userId", "name username email profilePicture")
+      .populate("connectionId", "name username email profilePicture");
 
-    return res.json(connections);
+    return res.json({connections});
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
 };
 
 export const whatAreMyConnections = async (req, res) => {
-  const { token } = req.body;
+  const { token } = req.query;
   try {
     const user = await User.findOne({ token });
     if (!user) {
@@ -254,12 +259,11 @@ export const whatAreMyConnections = async (req, res) => {
 
     const connections = await Connection.find({
       $or: [{ userId: user._id }, { connectionId: user._id }],
-      status: "accepted", // only accepted ones
     })
       .populate("userId", "name username email profilePicture")
       .populate("connectionId", "name username email profilePicture");
 
-    return res.json(connections);
+    return res.json({connections});
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
