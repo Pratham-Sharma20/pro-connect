@@ -26,6 +26,7 @@ router.route("/user/get_profile_based_on_username").get(getUserProfileAndUserBas
 router.route("/update_profile_picture").post(protect, upload.single("profilePicture"), uploadProfilePicture);
 router.route("/user_update").post(protect, updateUserProfile);
 router.route("/get_user_and_profile").get(protect, getUserAndProfile);
+router.route("/profile/me").get(protect, getUserAndProfile);
 router.route("/update_profile_data").post(protect, updateProfileData);
 router.route("/user/download_profile").get(protect, downloadProfile);
 router.route("/user/send_connection_request").post(protect, sendConnectionRequest);
