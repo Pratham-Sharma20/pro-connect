@@ -82,12 +82,12 @@ export const getConnectionRequest = createAsyncThunk(
   "user/getConnectionRequest",
   async (user, thunkAPI) => {
     try {
-      const response = await clientServer.get("/user/user_connection_requests", {
+      const response = await clientServer.get("/user/getConnection_request", {
         params: {
           token: user.token,
         },
       });
-      return thunkAPI.fulfillWithValue(response.data.connections);
+      return thunkAPI.fulfillWithValue(response.data.data.connections);
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response?.data || { message: "Error fetching connection requests" });
     }
@@ -108,17 +108,17 @@ export const sendConnectionRequest = createAsyncThunk(
     }
   }
 );
-
+ 
 export const getMyConnectionRequests = createAsyncThunk(
   "user/getMyConnectionRequests",
   async (user, thunkAPI) => {
     try {
-      const response = await clientServer.get("/user/getConnection_request", {
+      const response = await clientServer.get("/user/user_connection_requests", {
         params: {
           token: user.token,
         },
       });
-      return thunkAPI.fulfillWithValue(response.data.connections);
+      return thunkAPI.fulfillWithValue(response.data);
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response?.data || { message: "Error fetching my connection requests" });
     }
@@ -132,7 +132,7 @@ export const acceptConnection = createAsyncThunk(
       const response = await clientServer.post("/user/accept_connection_request", {
         token: user.token,
         requestId: user.requestId,
-        action_type: user.action,
+        action_type: user.action_type,
       });
       return thunkAPI.fulfillWithValue(response.data);
     } catch (err) {

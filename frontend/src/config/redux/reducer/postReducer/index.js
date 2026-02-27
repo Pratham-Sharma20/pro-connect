@@ -28,20 +28,20 @@ const postSlice = createSlice({
         state.message = "Fetching all posts ..";
       })
       .addCase(getAllPosts.fulfilled, (state, action) => {
-        (state.isLoading = false),
-          (state.isError = false),
-          (state.postFetched = true),
-          (state.posts = action.payload.reverse());
+        state.isLoading = false;
+        state.isError = false;
+        state.postFetched = true;
+        state.posts = action.payload?.data?.posts || [];
       })
       .addCase(getAllPosts.rejected, (state, action) => {
-        (state.isLoading = false),
-          (state.isError = true),
-          (state.message = action.payload);
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
       })
       .addCase(getAllComments.fulfilled , (state,action)=>{
-        state.postId = action.payload.post_id,
-        state.message = "Comment posted successfully",
-        state.comments = action.payload.comments;
+        state.postId = action.payload.post_id;
+        state.message = "Comment posted successfully";
+        state.comments = action.payload.comments.data.comments;
       })
       .addCase(getAllComments.rejected , (state,action)=>{
         state.isError = true;

@@ -10,8 +10,8 @@ const initialState = {
     isLoggedIn : false,
     message : "",
     profileFetched : false,
-    connections : [],
-    connectRequests : [],
+    connections : [],           // for "all connections"
+    connectionRequests : [],    // for "my connection requests"
     all_users : [],
     all_profiles_fetched : false
 }
@@ -44,54 +44,55 @@ const authSlice = createSlice({
             state.message = "knocking the door"
         })
         .addCase(loginUser.fulfilled , (state,action)=>{
-            state.isLoading = false,
-            state.isError = false,
-            state.isSuccess = true,
-            state.isLoggedIn = true,
-            state.message = "login successfull"
+            state.isLoading = false;
+            state.isError = false;
+            state.isSuccess = true;
+            state.isLoggedIn = true;
+            state.message = "login successfull";
         })
         .addCase(loginUser.rejected , (state,action)=>{
-            state.isLoading = false,
-            state.isError = true,
-            state.message = action.payload
+            state.isLoading = false;
+            state.isError = true;
+            state.message = action.payload;
         })
         .addCase(registerUser.pending , (state)=>{
             state.isLoading = true
             state.message = "regisstering you"
         })
         .addCase(registerUser.fulfilled, (state)=>{
-            state.isLoading = false,
-            state.isError = false,
-            state.isSuccess = true,
-            state.isLoggedIn = false,
-            state.message = "Registration is successfull"
+            state.isLoading = false;
+            state.isError = false;
+            state.isSuccess = true;
+            state.isLoggedIn = false;
+            state.message = "Registration is successfull";
         })
         .addCase(registerUser.rejected ,(state,action)=>{
-            state.isLoading = false,
-            state.isError = true,
-            state.message = action.payload
+            state.isLoading = false;
+            state.isError = true;
+            state.message = action.payload;
         })
         .addCase(getAboutUSer.fulfilled , (state,action)=>{
-            state.isLoading = false,
-            state.isError = false,
-            state.profileFetched= true,
-            state.user = action.payload.userProfile
+            state.isLoading = false;
+            state.isError = false;
+            state.profileFetched= true;
+            state.user = action.payload?.data?.userProfile || null;
         })
         .addCase(getAllUsers.fulfilled , (state,action)=>{
             state.isLoading = false;
             state.isError = false;
             state.all_profiles_fetched = true;
-            state.all_users = action.payload.profiles
+            state.all_users = action.payload?.data?.profiles || [];
         })
         .addCase(getConnectionRequest.fulfilled , (state , action )=>{
-            state.connections = action.payload.connections || action.payload
+            state.connections = action.payload; // Already maps appropriately in Action
+            console.log(state.connections)
         })
         .addCase(getConnectionRequest.rejected , (state , action )=>{
             state.message = action.payload
         })
         .addCase(getMyConnectionRequests.fulfilled , (state , action )=>{
-            state.connectRequests = action.payload.connections || action.payload;
-            console.log("Connection requests loaded:", action.payload);
+            state.connectionRequests = action.payload.data;
+            console.log("Connection requests loaded:", action.payload.data);
         })
         .addCase(getMyConnectionRequests.rejected , (state , action )=>{
             state.message = action.payload

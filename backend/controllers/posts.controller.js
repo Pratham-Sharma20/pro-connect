@@ -1,120 +1,124 @@
-import Comment_ from 'postcss/lib/comment';
 import Post from '../models/posts.models.js';
 import User from '../models/user.models.js';
 import Comment from '../models/comments.models.js';
+import catchAsync from '../utils/catchAsync.js';
 
-export const activeCheck = async(req,res)=>{
+export const activeCheck = catchAsync(async (req, res, next) => {
     return res.status(200).json({
+        status: "success",
         message: "running"
     });
-}
+});
 
+export const createPost = catchAsync(async (req, res, next) => {
+    const user = req.user;
+    
+    const post = await Post.create({
+        userId: user._id,
+        body: req.body.body,
+        media: req.file != undefined ? req.file.filename : "",
+        fileType: req.file != undefined ? req.file.mimetype.split("/")[1] : "",
+    });
 
-export const createPost = async (req,res)=>{
-    const{token} = req.body;
-    try{
-        const user = await User.findOne({token});
-        if(!user){
-            return res.status(404).json({message: "User not found"});
-        }
-        const post = new Post({
-            userId: user._id,
-            body : req.body.body,
-            media : req.file != undefined ? req.file.filename : "",
-            fileType : req.file != undefined ? req.file.mimetype.split("/")[1] : "",
-        });
+    return res.status(201).json({ status: "success", message: "Post created successfully", data: { post } });
+});
 
-        await post.save();
-        return res.status(200).json({message: "Post created successfully", post});  
-    }catch(err){
-        return res.status(500).json({message: err.message});
-    }
-}
+export const getAllPosts = catchAsync(async (req, res, next) => {
+    const posts = await Post.find()
+        .populate('userId', 'username profilePicture name')
+        .sort({ createdAt: -1 });
+        
+    return res.status(200).json({ status: "success", results: posts.length, data: { posts } });
+});
 
-export const getAllPosts = async(req,res)=>{
-    try{
-        const posts = await Post.find().populate('userId', 'username profilePicture');
-        return res.status(200).json(posts);
-    }catch(err){
-        return res.status(500).json({message: err.message});
-    }
-}
+export const deletPost = catchAsync(async (req, res, next) => {
+    const { post_id } = req.body;
+    const user = req.user;
 
-
-export const deletPost = async(req,res)=>{
-    const {token , post_id} = req.body;
-    try{
-        const user = await User.findOne({token : token}).select("_id");
-        if(!user){
-            return res.status(404).json({message: "User not found"});   
-        }
-        const post = await Post.findById(post_id);
-        if(!post){
-            return res.status(404).json({message: "Post not found"});
-        }
-        if(post.userId.toString() !== user._id.toString()){
-            return res.status(403).json({message: "You are not authorized to delete this post"});
-        }else{
-            await post.deleteOne({_id: post_id});
-            return res.status(200).json({message: "Post deleted successfully"});
-        }
-    }catch(err){
-        return res.status(500).json({message: err.message});
+    const post = await Post.findById(post_id);
+    if (!post) {
+        const err = new Error("Post not found");
+        err.statusCode = 404;
+        return next(err);
     }
 
-}
-
-
-export const get_comments_by_post = async(req,res)=>{
-    const {post_id} = req.query;
-    console.log("post id : " , post_id);
-    try{
-        const post = await Post.findOne({_id : post_id});
-        if(!post){
-            return res.status(404).json({message: "Post not found"});
-        }
-        const comments = await Comment.find({postId : post_id}).populate("userId","username name")
-        return res.status(200).json(comments.reverse());
-    }catch(err){
-        return res.status(500).json({message: err.message});
+    if (post.userId.toString() !== user._id.toString()) {
+        const err = new Error("You are not authorized to delete this post");
+        err.statusCode = 403;
+        return next(err);
     }
-}
 
+    await Post.findByIdAndDelete(post_id);
+    return res.status(200).json({ status: "success", message: "Post deleted successfully" });
+});
 
-export const delete_comment_of_user = async(req,res)=>{
-    const { token , comment_id} = req.body;
-    try{
-        const user = await User.findOne({token : token}).select("_id");
-        if(!user){
-            return res.status(404).json({message: "User not found"});   
-        }
-        const comment = await Comment.findOne({"_id": comment_id});
-        if(!comment){
-            return res.status(404).json({message: "Comment not found"});
-        }
-        if(comment.userId.toString() !== user._id.toString()){
-            return res.status(403).json({message: "You are not authorized to delete this comment"});
-        }
-        await comment.deleteOne({"_id": comment_id});
-        return res.status(200).json({message: "Comment deleted successfully"});
-    }catch(err){
-        return res.status(500).json({message: err.message});
+export const get_comments_by_post = catchAsync(async (req, res, next) => {
+    const { post_id } = req.query;
+
+    const post = await Post.findById(post_id);
+    if (!post) {
+        const err = new Error("Post not found");
+        err.statusCode = 404;
+        return next(err);
     }
-}
+
+    const comments = await Comment.find({ postId: post_id })
+        .populate("userId", "username name profilePicture")
+        .sort({ createdAt: -1 });
+
+    return res.status(200).json({ status: "success", results: comments.length, data: { comments } });
+});
+
+export const delete_comment_of_user = catchAsync(async (req, res, next) => {
+    const { comment_id } = req.body;
+    const user = req.user;
+
+    const comment = await Comment.findById(comment_id);
+    if (!comment) {
+        const err = new Error("Comment not found");
+        err.statusCode = 404;
+        return next(err);
+    }
+
+    if (comment.userId.toString() !== user._id.toString()) {
+        const err = new Error("You are not authorized to delete this comment");
+        err.statusCode = 403;
+        return next(err);
+    }
+
+    await Comment.findByIdAndDelete(comment_id);
+    return res.status(200).json({ status: "success", message: "Comment deleted successfully" });
+});
 
 
+export const increment_likes = catchAsync(async (req, res, next) => {
+    const { post_id } = req.body;
+    const user = req.user;
 
-export const increment_likes = async(req,res)=>{
-    const {post_id} = req.body;
-    try{
-        const post = await Post.findById(post_id);
-        if(!post){
-            return res.status(404).json({message: "Post not found"});
-        }
+    const post = await Post.findById(post_id);
+    if (!post) {
+        const err = new Error("Post not found");
+        err.statusCode = 404;
+        return next(err);
+    }
+
+    const isLiked = post.likedBy.includes(user._id);
+
+    if (isLiked) {
+        // Unlike: Remove user from likedBy and decrement likes
+        post.likedBy = post.likedBy.filter(id => id.toString() !== user._id.toString());
+        post.likes = Math.max(0, post.likes - 1);
+    } else {
+        // Like: Add user to likedBy and increment likes
+        post.likedBy.push(user._id);
         post.likes += 1;
-        await post.save();
-        return res.status(200).json({message: "Post liked successfully", likes: post});
-    }catch(err){
-        return res.status(500).json({message: err.message});
     }
-}
+
+    await post.save();
+
+    return res.status(200).json({ 
+        status: "success", 
+        message: isLiked ? "Post unliked successfully" : "Post liked successfully", 
+        data: { post } 
+    });
+});

@@ -22,6 +22,7 @@ const useSchema  = mongoose.Schema({
     password : {
         type : String,
         required : true,
+        select: false,
     },
     profilePicture : {
         type : String,
@@ -30,10 +31,6 @@ const useSchema  = mongoose.Schema({
     createdAt : {
         type : Date,
         default : Date.now,
-    },
-    token :{
-        type : String,
-        default : "",
     }
 });
 const User = mongoose.model("User", useSchema);

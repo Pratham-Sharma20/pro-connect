@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { activeCheck, createPost ,getAllPosts , deletPost ,get_comments_by_post, delete_comment_of_user, increment_likes } from '../controllers/posts.controller.js';
 import multer from 'multer';
 import { commentPost } from '../controllers/user.controller.js';
+import { protect } from '../middleware/authMiddleware.js';
 
 const router = Router();
 
@@ -16,13 +17,16 @@ const storage = multer.diskStorage({
 
 const upload = multer ({ storage: storage });
 
+// Public Routes
 router.route("/").get(activeCheck);
-router.route("/post").post(upload.single("media"),createPost)
 router.route("/get_posts").get(getAllPosts);
-router.route("/delete_post").delete(deletPost);
-router.route("/comments").post(commentPost);
 router.route("/get_comments").get(get_comments_by_post);
-router.route("/delete_comment").delete(delete_comment_of_user);
-router.route("/increment_likes").post(increment_likes);
+
+// Protected Routes
+router.route("/post").post(protect, upload.single("media"), createPost);
+router.route("/delete_post").delete(protect, deletPost);
+router.route("/comments").post(protect, commentPost);
+router.route("/delete_comment").delete(protect, delete_comment_of_user);
+router.route("/increment_likes").post(protect, increment_likes);
 
 export default router;

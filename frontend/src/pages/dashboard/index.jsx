@@ -42,7 +42,7 @@ export default function DashboardComponent() {
     if (!authState.all_profiles_fetched) {
       dispatch(getAllUsers());
     }
-  }, [authState.isTokenThere]);
+  }, [authState.isTokenThere, dispatch, authState.all_profiles_fetched]);
 
   if (authState.user?.userId?.profilePicture) {
     return (
@@ -56,49 +56,51 @@ export default function DashboardComponent() {
                   className={styles.userProfile}
                   src={`${BASE_URL}/${authState.user.userId.profilePicture}`}
                   alt="Profile"
+                  style={{width: "50px", height: "50px", borderRadius: "50%"}}
                 />
                 <textarea
                   className={styles.postTextarea}
-                  placeholder="What's in your mind?"
+                  placeholder="Share your thoughts..."
                   onChange={(e) => setPostContent(e.target.value)}
                   value={postContent}
                 />
-                <div className={styles.postActions}>
-                  <label
-                    htmlFor="fileUpload"
-                    className={styles.fileUploadLabel}
-                  >
-                    <div className={styles.addButton}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 4.5v15m7.5-7.5h-15"
-                        />
-                      </svg>
-                    </div>
-                  </label>
-                  <input
-                    onChange={(e) => setFileContent(e.target.files[0])}
-                    type="file"
-                    hidden
-                    id="fileUpload"
-                  />
-                </div>
               </div>
-              {postContent.length > 0 && (
-                <div className={styles.postButtonContainer}>
-                  <button onClick={handleUpload} className={styles.postButton}>
-                    Post
-                  </button>
-                </div>
-              )}
+              <div className={styles.postActions}>
+                <label
+                  htmlFor="fileUpload"
+                  className={styles.fileUploadLabel}
+                >
+                  <div className={styles.addButton}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={2}
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 4.5v15m7.5-7.5h-15"
+                      />
+                    </svg>
+                  </div>
+                </label>
+                <input
+                  onChange={(e) => setFileContent(e.target.files[0])}
+                  type="file"
+                  hidden
+                  id="fileUpload"
+                />
+                
+                {postContent.length > 0 && (
+                  <div style={{marginLeft: "auto"}}>
+                    <button onClick={handleUpload} className={styles.postButton}>
+                      Post
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Posts Feed */}
@@ -110,40 +112,31 @@ export default function DashboardComponent() {
                       <div className={styles.userInfo}>
                         {post.userId && (
                           <img
-                            className={styles.userProfile}
                             src={`${BASE_URL}/${post.userId.profilePicture}`}
-                            alt={`${post.userId.username}'s profile`}
+                            alt="profile"
+                            style={{width: "45px", height: "45px", borderRadius: "50%", objectFit: "cover"}}
                           />
                         )}
                         <div className={styles.userDetails}>
                           <p className={styles.username}>
-                            {post.userId.username}
+                            {post.userId?.name || post.userId?.username || "Unknown User"}
                           </p>
                           <p className={styles.userHandle}>
-                            @{post.userId.username.toLowerCase()}
+                            @{post.userId?.username?.toLowerCase() || "unknown"}
                           </p>
                         </div>
                       </div>
+                      
                       {post.userId._id === authState.user.userId._id && (
                         <div
                           onClick={async () => {
                             await dispatch(deletePost({ post_id: post._id }));
                             await dispatch(getAllPosts());
                           }}
-                          className={styles.deleteButton}
+                          style={{color: "#ff4d4d", cursor: "pointer"}}
                         >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                            />
+                          <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                           </svg>
                         </div>
                       )}
@@ -163,77 +156,41 @@ export default function DashboardComponent() {
                     <div className={styles.postFooter}>
                       <div
                         onClick={async () => {
-                          await dispatch(
-                            incrementPostLikes({ post_id: post._id })
-                          );
+                          await dispatch(incrementPostLikes({ post_id: post._id }));
                           dispatch(getAllPosts());
                         }}
-                        className={styles.likeSection}
+                        className={`${styles.actionItem} ${
+                          post.likedBy?.includes(authState.user.userId._id) ? styles.liked : ""
+                        }`}
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={1.5}
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z"
-                          />
+                        <svg fill={post.likedBy?.includes(authState.user.userId._id) ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
                         </svg>
-                        <span className={styles.likeCount}>{post.likes}</span>
+                        <span>{post.likes} Likes</span>
                       </div>
+                      
                       <div
-                        onClick={() => {
-                          dispatch(getAllComments({ post_id: post._id }));
-                        }}
-                        className={styles.commentSection}
+                        onClick={() => dispatch(getAllComments({ post_id: post._id }))}
+                        className={styles.actionItem}
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={1.5}
-                          stroke="currentColor"
-                          className="size-6"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z"
-                          />
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
                         </svg>
-                        <span className={styles.commentCount}>
-                          {post.comments}
-                        </span>
+                        <span>{post.comments} Comments</span>
                       </div>
+                      
                       <div
                         onClick={() => {
                           const text = encodeURIComponent(post.body);
-                          const url = encodeURIComponent("apnacollege.in");
-
-                          const twitterUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
-
+                          const twitterUrl = `https://twitter.com/intent/tweet?text=${text}`;
                           window.open(twitterUrl, "_blank");
                         }}
-                        className={styles.shareSection}
+                        className={styles.actionItem}
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={1.5}
-                          stroke="currentColor"
-                          className="size-6"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z"
-                          />
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
                         </svg>
+                        <span>Share</span>
                       </div>
                     </div>
                   </div>
@@ -250,41 +207,46 @@ export default function DashboardComponent() {
                 onClick={(e) => e.stopPropagation()}
                 className={styles.allCommentsContainer}
               >
-                {postState.comments.length === 0 && <h3>No Comments</h3>}
-
-                {postState.comments.length!==0 && 
-                    <div>
-                      {postState.comments.map((comment , index)=>{
-                        return(
-                          <div className={styles.singleComment} key={comment._id}>
-                            <img src={`${BASE_URL}/${comment.userId.profilePicture}`} alt="" />
-                            <div>
-                              <p style={{fontWeight:"bold" , fontSize:"1.2rem"}}>
-                                {comment.userId.name}
-                              </p>
-                              <p> @{comment.userId.username}</p>
-                            </div>
-                            </div>
-                        ) 
-                      })}
+                <div style={{ flex: 1, overflowY: "auto", marginBottom: "1rem" }}>
+                  {postState.comments.length === 0 ? (
+                    <h3 style={{textAlign: "center", color: "#999", marginTop: "2rem"}}>No Comments Yet</h3>
+                  ) : (
+                    postState.comments.map((comment, index) => (
+                      <div className={styles.singleComment} key={comment._id || index}>
+                        <img
+                          src={`${BASE_URL}/${comment.userId?.profilePicture || 'default.jpg'}`}
+                          alt=""
+                        />
+                        <div>
+                          <p style={{ fontWeight: "700", marginBottom: "0.2rem" }}>
+                            {comment.userId?.name || "Unknown User"}
+                          </p>
+                          <p style={{ fontSize: "0.85rem", color: "#666" }}>{comment.body}</p>
+                        </div>
                       </div>
-                  }
+                    ))
+                  )}
+                </div>
 
                 <div className={styles.postCommentContainer}>
                   <input
                     type="text"
                     value={commentText}
                     onChange={(e) => setCommentText(e.target.value)}
-                    placeholder="Comment"
+                    placeholder="Write a comment..."
                   />
                   <div
                     onClick={async () => {
+                      if (!commentText.trim()) return;
                       await dispatch(postComment({ post_id: postState.postId, body: commentText }));
                       await dispatch(getAllComments({ post_id: postState.postId }));
+                      setCommentText("");
                     }}
-                    className={styles.postCommentContainer_commentBtn}
+                    className={styles.commentBtn}
                   >
-                    <p>Comment</p>
+                    <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
                   </div>
                 </div>
               </div>
@@ -298,7 +260,7 @@ export default function DashboardComponent() {
       <UserLayout>
         <DashboardLayout>
           <div className={styles.loadingContainer}>
-            <h2>Loading...</h2>
+            <h2>Loading your feed...</h2>
           </div>
         </DashboardLayout>
       </UserLayout>

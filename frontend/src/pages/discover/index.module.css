@@ -1,21 +1,97 @@
-.allUserProfile{
-    max-width: 80%;
-    align-items : center;
-    display: flex;
-    flex-direction: column;
-    gap : 1.2rem;
+.discoverContainer {
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
-.userCard{
-    display: flex;
-    gap : 1.2rem;
-    padding : 1.2rem;
-    align-items: center;
-    box-shadow: 10px 10px 10px 0px rgba(0,0,0,0.1);
-    cursor: pointer;
+.pageHeader {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 2.5rem;
+  background: linear-gradient(135deg, #1a1a1a 0%, #4a4a4a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.02em;
 }
 
-.userCard_img{
-    border-radius: 50%;
-    width:10%;
+.allUserProfile {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.userCard {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 24px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.userCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(135deg, #035db7 0%, #00d4ff 100%);
+  opacity: 0.1;
+  z-index: 0;
+}
+
+.userCard:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border-color: rgba(3, 93, 183, 0.3);
+}
+
+.userCard_img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid white;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  margin-bottom: 1.2rem;
+  z-index: 1;
+}
+
+.userCard h1 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0.5rem 0;
+  color: #1a1a1a;
+}
+
+.userCard p {
+  font-size: 0.95rem;
+  color: #777;
+  margin-bottom: 1.5rem;
+}
+
+.viewBtn {
+  margin-top: auto;
+  padding: 0.7rem 1.5rem;
+  background: white;
+  color: #035db7;
+  border: 2px solid #035db7;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.userCard:hover .viewBtn {
+  background: #035db7;
+  color: white;
 }
