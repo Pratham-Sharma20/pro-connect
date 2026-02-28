@@ -71,7 +71,7 @@ export default function DashboardLayout({ children }) {
 
                 <h3>Top profiles for you</h3>
 
-                {authState?.all_profiles_fetched && authState?.all_users?.map((profile) => (
+                {authState?.all_profiles_fetched && authState?.all_users?.filter((profile) => profile.userId?._id !== authState.user?.userId?._id).map((profile) => (
                   <div 
                     key={profile._id} 
                     className={styles.extraContainer_profile}
