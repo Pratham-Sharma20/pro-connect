@@ -109,7 +109,7 @@ export const login = catchAsync(async (req, res, next) => {
 
 export const uploadProfilePicture = catchAsync(async (req, res, next) => {
   const user = req.user;
-  user.profilePicture = req.file.path;
+  user.profilePicture = req.file.filename;
   await user.save();
   return res.json({ status: "success", message: "Profile picture updated successfully" });
 });

@@ -6,9 +6,13 @@ import styles from "./styles.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { acceptConnection, getMyConnectionRequests, sendConnectionRequest } from "@/config/redux/action/authAction";
 
+import EditProfileModal from "../EditProfileModal";
+
 export default function ProfileComponent({ userProfile, userPosts }) {
   const dispatch = useDispatch();
   const authState = useSelector((state) => state.auth);
+  
+  const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
 
   useEffect(() => {
     dispatch(getMyConnectionRequests({ token: localStorage.getItem("token") }));
@@ -80,7 +84,13 @@ export default function ProfileComponent({ userProfile, userPosts }) {
   };
 
   const renderConnectionButton = () => {
-    if (buttonConfig.status === "self") return null;
+    if (buttonConfig.status === "self") {
+      return (
+        <button onClick={() => setIsEditModalOpen(true)} className={styles.connectBtn} style={{ background: "#333", color: "white" }}>
+          Edit Profile
+        </button>
+      );
+    }
 
     switch (buttonConfig.status) {
       case "accepted":
@@ -193,6 +203,17 @@ export default function ProfileComponent({ userProfile, userPosts }) {
             </div>
           </div>
         </div>
+
+        <EditProfileModal
+          isOpen={isEditModalOpen}
+          initialData={userProfile}
+          onClose={() => setIsEditModalOpen(false)}
+          onSuccess={() => {
+            setIsEditModalOpen(false);
+            window.location.reload();
+          }}
+        />
+
       </DashboardLayout>
     </UserLayout>
   );

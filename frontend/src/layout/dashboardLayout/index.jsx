@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { setTokenIsThere } from "@/config/redux/reducer/authReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL } from "@/config";
+import { getAboutUSer } from "@/config/redux/action/authAction";
 
 export default function DashboardLayout({ children }) {
 
@@ -12,10 +13,13 @@ export default function DashboardLayout({ children }) {
     const authState = useSelector((state)=>state.auth);
 
       useEffect(()=>{
-            if(localStorage.getItem("token")===null){
+          const token = localStorage.getItem("token");
+            if(!token){
                 router.push("/login");
+            } else {
+                dispatch(setTokenIsThere());
+                dispatch(getAboutUSer({ token }));
             }
-            dispatch(setTokenIsThere());
         },[])
   return (
     <>

@@ -36,7 +36,6 @@ export default function DashboardComponent() {
   useEffect(() => {
     if (authState.isTokenThere) {
       dispatch(getAllPosts());
-      dispatch(getAboutUSer({ token: localStorage.getItem("token") }));
     }
 
     if (!authState.all_profiles_fetched) {
