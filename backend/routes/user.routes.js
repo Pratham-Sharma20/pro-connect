@@ -14,7 +14,22 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage : storage });
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+  if (allowedTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    const error = new Error('Invalid file type! Only JPEG, PNG, and WEBP images are allowed.');
+    error.statusCode = 400;
+    cb(error, false);
+  }
+};
+
+const upload = multer({ 
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  fileFilter: fileFilter
+});
 
 // Public Routes
 router.route("/register").post(register);
