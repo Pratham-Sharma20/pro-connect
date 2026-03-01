@@ -9,6 +9,7 @@ import jwt from "jsonwebtoken";
 import PDFDocument from "pdfkit";
 import fs from "fs";
 import catchAsync from "../utils/catchAsync.js";
+import { deleteFromCloudinary } from "../utils/cloudinary.js";
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -108,8 +109,19 @@ export const login = catchAsync(async (req, res, next) => {
 });
 
 export const uploadProfilePicture = catchAsync(async (req, res, next) => {
+  if (!req.file) {
+    const err = new Error("Please upload an image file");
+    err.statusCode = 400;
+    return next(err);
+  }
+
   const user = req.user;
-  user.profilePicture = req.file.filename;
+
+  if (user.profilePicture && user.profilePicture.startsWith('http')) {
+      await deleteFromCloudinary(user.profilePicture, "image");
+  }
+
+  user.profilePicture = req.file.path;
   await user.save();
   return res.json({ status: "success", message: "Profile picture updated successfully" });
 });

@@ -13,7 +13,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./index.module.css";
-import { BASE_URL } from "@/config";
+import { BASE_URL, formatImageUrl } from "@/config";
 import { resetPostId } from "@/config/redux/reducer/postReducer";
 
 export default function DashboardComponent() {
@@ -53,7 +53,7 @@ export default function DashboardComponent() {
               <div className={styles.createPostHeader}>
                 <img
                   className={styles.userProfile}
-                  src={`${BASE_URL}/${authState.user.userId.profilePicture}`}
+                  src={formatImageUrl(authState.user.userId.profilePicture)}
                   alt="Profile"
                   style={{width: "50px", height: "50px", borderRadius: "50%"}}
                 />
@@ -111,7 +111,7 @@ export default function DashboardComponent() {
                       <div className={styles.userInfo}>
                         {post.userId && (
                           <img
-                            src={`${BASE_URL}/${post.userId.profilePicture}`}
+                            src={formatImageUrl(post.userId.profilePicture)}
                             alt="profile"
                             style={{width: "45px", height: "45px", borderRadius: "50%", objectFit: "cover"}}
                           />
@@ -144,11 +144,20 @@ export default function DashboardComponent() {
                     <div className={styles.postContent}>
                       <p className={styles.postText}>{post.body}</p>
                       {post.media && (
-                        <img
-                          className={styles.postMedia}
-                          src={`${BASE_URL}/${post.media}`}
-                          alt="Post media"
-                        />
+                        ['mp4', 'webm', 'mov'].includes(post.fileType) ? (
+                          <video
+                            className={styles.postMedia}
+                            controls
+                            src={formatImageUrl(post.media)}
+                            alt="Post media"
+                          />
+                        ) : (
+                          <img
+                            className={styles.postMedia}
+                            src={formatImageUrl(post.media)}
+                            alt="Post media"
+                          />
+                        )
                       )}
                     </div>
 
@@ -213,7 +222,7 @@ export default function DashboardComponent() {
                     postState.comments.map((comment, index) => (
                       <div className={styles.singleComment} key={comment._id || index}>
                         <img
-                          src={`${BASE_URL}/${comment.userId?.profilePicture || 'default.jpg'}`}
+                          src={formatImageUrl(comment.userId?.profilePicture)}
                           alt=""
                         />
                         <div>

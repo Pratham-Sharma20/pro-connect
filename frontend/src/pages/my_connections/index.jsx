@@ -4,7 +4,7 @@ import DashboardLayout from "@/layout/dashboardLayout";
 import { useDispatch, useSelector } from "react-redux";
 import { acceptConnection, getMyConnectionRequests } from "@/config/redux/action/authAction";
 import styles from "./index.module.css";
-import { BASE_URL } from "@/config";
+import { BASE_URL, formatImageUrl } from "@/config";
 import { useRouter } from "next/router";
 
 export default function My_Connections() {
@@ -61,7 +61,7 @@ export default function My_Connections() {
                     <div className={styles.profileInfo}>
                       <div className={styles.profilePicture}>
                         <img
-                          src={`${BASE_URL}/${otherUser.profilePicture}`}
+                          src={formatImageUrl(otherUser.profilePicture)}
                           alt={otherUser.name}
                         />
                       </div>
@@ -112,7 +112,7 @@ export default function My_Connections() {
                     <div className={styles.profileInfo}>
                       <div className={styles.profilePicture}>
                         <img
-                          src={`${BASE_URL}/${otherUser.profilePicture}`}
+                          src={formatImageUrl(otherUser.profilePicture)}
                           alt={otherUser.name}
                         />
                       </div>
@@ -147,7 +147,7 @@ export default function My_Connections() {
                     <div className={styles.profileInfo}>
                       <div className={styles.profilePicture}>
                         <img
-                          src={`${BASE_URL}/${otherUser.profilePicture}`}
+                          src={formatImageUrl(otherUser.profilePicture)}
                           alt={otherUser.name}
                         />
                       </div>

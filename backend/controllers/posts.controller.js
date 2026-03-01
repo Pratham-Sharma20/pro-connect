@@ -2,6 +2,7 @@ import Post from '../models/posts.models.js';
 import User from '../models/user.models.js';
 import Comment from '../models/comments.models.js';
 import catchAsync from '../utils/catchAsync.js';
+import { deleteFromCloudinary } from '../utils/cloudinary.js';
 
 export const activeCheck = catchAsync(async (req, res, next) => {
     return res.status(200).json({
@@ -13,10 +14,16 @@ export const activeCheck = catchAsync(async (req, res, next) => {
 export const createPost = catchAsync(async (req, res, next) => {
     const user = req.user;
     
+    if (!req.body.body && !req.file) {
+        const err = new Error("Post must contain text or media");
+        err.statusCode = 400;
+        return next(err);
+    }
+    
     const post = await Post.create({
         userId: user._id,
-        body: req.body.body,
-        media: req.file != undefined ? req.file.filename : "",
+        body: req.body.body || "",
+        media: req.file != undefined ? req.file.path : "",
         fileType: req.file != undefined ? req.file.mimetype.split("/")[1] : "",
     });
 
@@ -46,6 +53,10 @@ export const deletPost = catchAsync(async (req, res, next) => {
         const err = new Error("You are not authorized to delete this post");
         err.statusCode = 403;
         return next(err);
+    }
+
+    if (post.media) {
+        await deleteFromCloudinary(post.media, post.fileType);
     }
 
     await Post.findByIdAndDelete(post_id);

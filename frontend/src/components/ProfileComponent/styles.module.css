@@ -151,7 +151,8 @@
   box-shadow: 0 4px 15px rgba(0,0,0,0.02);
 }
 
-.card_profileContainer img {
+.card_profileContainer img,
+.card_profileContainer video {
   width: 100%;
   border-radius: 10px;
   margin-bottom: 0.8rem;

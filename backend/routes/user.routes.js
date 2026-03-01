@@ -1,18 +1,10 @@
 import { Router } from 'express';
 import { login , register , uploadProfilePicture,updateUserProfile , getUserAndProfile, updateProfileData , getAllUserProfiles , downloadProfile, sendConnectionRequest , getConnectionRequests, whatAreMyConnections, acceptConnectionRequest, getUserProfileAndUserBasedOnUsername} from '../controllers/user.controller.js';
 import multer from 'multer';
+import { profileStorage } from '../utils/cloudinary.js';
 import { protect } from '../middleware/authMiddleware.js';
 
 const router = Router();
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname);
-  }
-});
 
 const fileFilter = (req, file, cb) => {
   const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
@@ -26,7 +18,7 @@ const fileFilter = (req, file, cb) => {
 };
 
 const upload = multer({ 
-  storage: storage,
+  storage: profileStorage,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
   fileFilter: fileFilter
 });

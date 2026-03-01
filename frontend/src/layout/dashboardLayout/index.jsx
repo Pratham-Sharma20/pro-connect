@@ -3,7 +3,7 @@ import styles from "./index.module.css"
 import { useRouter } from "next/router";
 import { setTokenIsThere } from "@/config/redux/reducer/authReducer";
 import { useDispatch, useSelector } from "react-redux";
-import { BASE_URL } from "@/config";
+import { BASE_URL, formatImageUrl } from "@/config";
 import { getAboutUSer } from "@/config/redux/action/authAction";
 
 export default function DashboardLayout({ children }) {
@@ -81,7 +81,7 @@ export default function DashboardLayout({ children }) {
                     className={styles.extraContainer_profile}
                     onClick={() => router.push(`/view_profile/${profile.userId.username}`)}
                   >
-                    <img src={`${BASE_URL}/${profile.userId.profilePicture}`} alt={profile.userId.name} />
+                    <img src={formatImageUrl(profile.userId.profilePicture)} alt={profile.userId.name} />
                     <p>{profile.userId.name}</p>
                   </div>
                 ))}

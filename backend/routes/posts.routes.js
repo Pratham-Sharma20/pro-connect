@@ -1,19 +1,11 @@
 import { Router } from 'express';
 import { activeCheck, createPost ,getAllPosts , deletPost ,get_comments_by_post, delete_comment_of_user, increment_likes } from '../controllers/posts.controller.js';
 import multer from 'multer';
+import { postStorage } from '../utils/cloudinary.js';
 import { commentPost } from '../controllers/user.controller.js';
 import { protect } from '../middleware/authMiddleware.js';
 
 const router = Router();
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  }
-});
 
 const fileFilter = (req, file, cb) => {
   const allowedTypes = [
@@ -30,7 +22,7 @@ const fileFilter = (req, file, cb) => {
 };
 
 const upload = multer({ 
-  storage: storage,
+  storage: postStorage,
   limits: { fileSize: 50 * 1024 * 1024 }, // 50MB limit
   fileFilter: fileFilter
 });

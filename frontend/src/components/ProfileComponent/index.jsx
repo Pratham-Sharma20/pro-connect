@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { BASE_URL, clientServer } from "@/config";
+import { BASE_URL, clientServer, formatImageUrl } from "@/config";
 import DashboardLayout from "@/layout/dashboardLayout";
 import UserLayout from "@/layout/userLayout";
 import styles from "./styles.module.css";
@@ -115,7 +115,7 @@ export default function ProfileComponent({ userProfile, userPosts }) {
         <div className={styles.container}>Profile</div>
         <div className={styles.backDropContainer}>
           <img
-            src={`${BASE_URL}/${userProfile?.userId?.profilePicture || "default.png"}`}
+            src={formatImageUrl(userProfile?.userId?.profilePicture)}
             alt="profile"
           />
         </div>
@@ -190,7 +190,11 @@ export default function ProfileComponent({ userProfile, userPosts }) {
                     <div key={post._id} className={styles.postCard}>
                       <div className={styles.card_profileContainer}>
                         {post.media && (
-                          <img src={`${BASE_URL}/${post.media}`} alt="img" />
+                          ['mp4', 'webm', 'mov'].includes(post.fileType) ? (
+                            <video controls src={formatImageUrl(post.media)} alt="video" />
+                          ) : (
+                            <img src={formatImageUrl(post.media)} alt="img" />
+                          )
                         )}
                       </div>
                       <p style={{fontSize: "0.9rem", color: "#444"}}>{post.body}</p>
