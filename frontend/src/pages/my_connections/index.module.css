@@ -1,9 +1,10 @@
 .connectionsContainer {
-  padding: 2rem;
+  padding: 1.5rem;
   max-width: 1000px;
   margin: 0 auto;
   min-height: 100vh;
 }
+
 
 .pageHeader {
   font-size: 2.2rem;
@@ -136,4 +137,25 @@
   color: #999;
   font-style: italic;
   margin-left: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .connectionsContainer {
+    padding: 1rem;
+  }
+  .pageHeader {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+  }
+  .cardsGrid {
+    grid-template-columns: 1fr; /* Single column on mobile */
+    gap: 1rem;
+  }
+  .userCard {
+    padding: 1.2rem;
+  }
+  .profilePicture {
+    width: 50px;
+    height: 50px;
+  }
 }

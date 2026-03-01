@@ -1,8 +1,9 @@
 .discoverContainer {
-  padding: 2rem;
+  padding: 1.5rem;
   max-width: 1000px;
   margin: 0 auto;
 }
+
 
 .pageHeader {
   font-size: 2.2rem;
@@ -94,4 +95,21 @@
 .userCard:hover .viewBtn {
   background: #035db7;
   color: white;
+}
+
+@media (max-width: 768px) {
+  .discoverContainer {
+    padding: 1rem;
+  }
+  .pageHeader {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+  }
+  .allUserProfile {
+    grid-template-columns: 1fr; /* Single column on mobile */
+    gap: 1.5rem;
+  }
+  .userCard {
+    padding: 1.5rem;
+  }
 }

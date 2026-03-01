@@ -156,3 +156,51 @@
   border-radius: 10px;
   margin-bottom: 0.8rem;
 }
+
+@media (max-width: 1024px) {
+  .profileContainer_details {
+    padding: 100px 30px 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+    font-size: 1.2rem;
+  }
+  .backDropContainer {
+    height: 180px;
+  }
+  .backDropContainer img {
+    width: 120px;
+    height: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -60px;
+  }
+  .profileContainer_details {
+    padding: 80px 1.5rem 2rem;
+    text-align: center;
+  }
+  .userDetails h2 {
+    font-size: 1.6rem;
+  }
+  .userDetails div {
+    justify-content: center;
+  }
+  .bio {
+    font-size: 1rem;
+    margin: 1.5rem auto;
+  }
+  .profileContainer_details > div:last-child {
+    flex-direction: column !important;
+    gap: 2rem !important;
+  }
+  .profileContainer_details > div:last-child > div {
+    flex: 1 !important;
+  }
+  .workHistoryContainer {
+    grid-template-columns: 1fr;
+  }
+}
+

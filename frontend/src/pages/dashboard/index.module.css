@@ -1,9 +1,10 @@
 .scrollContainer {
-  padding: 2rem 0;
+  padding: 1.5rem 0.5rem;
   max-width: 650px;
   margin: 0 auto;
   min-height: 100vh;
 }
+
 
 /* Create Post Card */
 .createPostCard {
@@ -246,4 +247,36 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
+}
+
+@media (max-width: 768px) {
+  .scrollContainer {
+    padding: 1rem;
+  }
+  .createPostCard {
+    padding: 1.2rem;
+    border-radius: 18px;
+  }
+  .postCard {
+    padding: 1.2rem;
+    border-radius: 18px;
+  }
+  .postFooter {
+    gap: 1rem;
+    justify-content: space-between;
+  }
+  .actionItem span {
+    display: none; /* Hide 'Likes', 'Comments' text on small mobile */
+  }
+  .actionItem svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  .allCommentsContainer {
+    padding: 1.5rem;
+    border-radius: 24px 24px 0 0;
+    max-height: 90vh;
+    width: 100%;
+    margin-top: auto; /* Slide up from bottom on mobile */
+  }
 }

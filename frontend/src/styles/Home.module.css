@@ -47,16 +47,45 @@
   font-size: 1.7rem;
 }
 
-.mainContainer_left > div.buttonJoin{
-  width : fit-content;
-  cursor: pointer;
-  user-select: none;
-  transition: all 0.2s;
-  margin-top : 0.8rem;
-  font-size: 1.4rem;
-  background : rgb(197 , 44 , 208);
-  color : white;
-  padding-inline: 1.2rem;
-  padding-block: 0.8rem;
-  border-radius: 20px;
+.mainContainer_left > div.buttonJoin:hover {
+  transform: scale(1.05);
+}
+
+@media (max-width: 1024px) {
+  .mainContainer {
+    gap: 2rem;
+  }
+  .mainContainer_left > p:nth-child(1) {
+    font-size: 2.2rem;
+  }
+  .mainContainer_left > p:nth-child(2) {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .mainContainer {
+    flex-direction: column-reverse;
+    text-align: center;
+    height: auto;
+    padding-block: 3rem;
+  }
+  .mainContainer_left, .mainContainer_right {
+    flex: 1;
+    width: 100%;
+  }
+  .mainContainer_left > p:nth-child(1) {
+    font-size: 2rem;
+  }
+  .mainContainer_left > p:nth-child(2) {
+    font-size: 1.2rem;
+  }
+  .mainContainer_left > div.buttonJoin {
+    margin: 1.5rem auto 0;
+  }
+  .mainContainer_right img {
+    max-width: 250px;
+    margin: 0 auto;
+    display: block;
+  }
 }

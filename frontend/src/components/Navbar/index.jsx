@@ -18,31 +18,30 @@ function Navbar() {
   return (
     <div className={styles.container}>
       <nav className={styles.navbar}>
-        <h1 style={{cursor:"pointer"}} onClick={()=>{
+        <h1 className={styles.logo} onClick={()=>{
             router.push("/")
         }}>Pro connect</h1>
 
-        {authState.profileFetched && <div>
-
-          <div style={{display:"flex" , gap:"1.2rem"}}>
-            <p>Hey {authState.user.userId.name}</p>
-            <p onClick={() => router.push("/profile")} style={{fontWeight:"bold" , cursor:"pointer"}}>Profile</p>
-            <p onClick={handleLogout} style={{fontWeight:"bold" , cursor:"pointer"}}>Logout</p> 
+        {authState.profileFetched ? (
+          <div className={styles.navAuthDetails}>
+            <p className={styles.welcomeText}>Hey {authState.user.userId.name}</p>
+            <div className={styles.navLinks}>
+              <p onClick={() => router.push("/profile")} className={styles.navLink}>Profile</p>
+              <p onClick={handleLogout} className={styles.navLink}>Logout</p> 
+            </div>
           </div>
-
-          </div>}
-
-
-        {!authState.profileFetched && <div className={styles.navbarOptionsContainer}>
-          <div
-            onClick={() => {
-              router.push("/login");
-            }}
-            className={styles.buttonJoin}
-          >
-            <p>join now</p>
+        ) : (
+          <div className={styles.navbarOptionsContainer}>
+            <div
+              onClick={() => {
+                router.push("/login");
+              }}
+              className={styles.buttonJoin}
+            >
+              <p>join now</p>
+            </div>
           </div>
-        </div>}
+        )}
       </nav>
     </div>
   );

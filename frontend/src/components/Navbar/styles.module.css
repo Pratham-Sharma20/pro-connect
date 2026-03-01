@@ -1,24 +1,77 @@
-.container{
-    padding : 1.2rem;
+.container {
+    padding: 1rem 1.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
-.navbar{
+.navbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.navbarOptionsContainer{
-    display : flex;
+.logo {
+    cursor: pointer;
+    font-size: 1.5rem;
+    font-weight: 800;
 }
 
-.buttonJoin{
-    background : #cd8987;
-    border-radius: 10px;
-    padding-block: 0.6rem;
-    padding-inline : 1.2rem;
-    color : white;
-    font-size : 0.7rem;
+.navAuthDetails {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.welcomeText {
+    font-weight: 500;
+    color: #666;
+}
+
+.navLinks {
+    display: flex;
+    gap: 1.2rem;
+}
+
+.navLink {
+    font-weight: 700;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.navLink:hover {
+    color: #035db7;
+}
+
+.navbarOptionsContainer {
+    display: flex;
+}
+
+.buttonJoin {
+    background: #cd8987;
+    border-radius: 12px;
+    padding: 0.6rem 1.2rem;
+    color: white;
+    font-size: 0.8rem;
     font-weight: bold;
     cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.buttonJoin:hover {
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+    .logo {
+        font-size: 1.2rem;
+    }
+    .welcomeText {
+        display: none; /* Hide welcome text on mobile to save space */
+    }
+    .navAuthDetails {
+        gap: 1rem;
+    }
 }

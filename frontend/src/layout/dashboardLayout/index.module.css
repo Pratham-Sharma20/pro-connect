@@ -11,6 +11,66 @@
     flex : 0.6;
 }
 
+@media (max-width: 1200px) {
+    .homeContainer > div:nth-child(odd) {
+        flex: 0.25;
+    }
+    .homeContainer > div:nth-child(even) {
+        flex: 0.5;
+    }
+}
+
+@media (max-width: 1024px) {
+    .homeContainer_extraContainer {
+        display: none; /* Hide recommendations on tablets to make room for feed */
+    }
+    .homeContainer > div:nth-child(odd):first-child {
+        flex: 0.1; /* Shrink sidebar */
+    }
+    .homeContainer > div:nth-child(even) {
+        flex: 0.9;
+    }
+    .sidebarOption p {
+        display: none; /* Icon-only sidebar on small tablets */
+    }
+    .sidebarOption {
+        justify-content: center;
+        width: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .homeContainer {
+        flex-direction: column;
+    }
+    .homeContainer_leftbar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        flex-direction: row;
+        height: 60px;
+        background: white;
+        z-index: 1000;
+        border-right: none;
+        border-top: 1px solid var(--border-color);
+        justify-content: space-around;
+        align-items: center;
+        padding: 0;
+    }
+    .homeContainer > div:nth-child(odd):first-child {
+        flex: none;
+    }
+    .sidebarOption {
+        margin: 0;
+        padding: 0.5rem;
+    }
+    .homeContainer_feedContainer {
+        padding-bottom: 80px; /* Space for bottom nav */
+    }
+}
+
+
 
 .homeContainer_leftbar{
     display: flex;

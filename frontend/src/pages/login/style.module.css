@@ -76,4 +76,36 @@
     padding-inline: 1.2rem;
 }
 
+@media (max-width: 1024px) {
+    .cardContainer {
+        width: 90vw;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        height: auto;
+        padding: 2rem 1rem;
+    }
+    .cardContainer {
+        flex-direction: column;
+        height: auto;
+        width: 100%;
+        max-width: 450px;
+    }
+    .cardContainer_left {
+        flex: 1;
+        padding: 2.5rem 1.5rem;
+    }
+    .cardContainer_right {
+        flex: 1;
+        padding: 2.5rem 1.5rem;
+    }
+    .inputRow {
+        flex-direction: column;
+        width: 100%;
+    }
+}
+
+
 
