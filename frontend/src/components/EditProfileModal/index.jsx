@@ -103,6 +103,22 @@ export default function EditProfileModal({
           <div className={styles.inputGroup}>
             <label>Profile Picture</label>
             <input type="file" accept="image/*" className={styles.fileInput} onChange={handleFileChange} />
+            {profilePicture && (
+              <div style={{ marginTop: "0.5rem", position: "relative", display: "inline-block" }}>
+                <img 
+                  src={URL.createObjectURL(profilePicture)} 
+                  alt="preview" 
+                  style={{ width: "80px", height: "80px", borderRadius: "50%", objectFit: "cover", border: "2px solid #035db7" }} 
+                />
+                <button 
+                  onClick={() => setProfilePicture(null)}
+                  style={{ position: "absolute", top: "0", right: "0", background: "red", color: "white", borderRadius: "50%", border: "none", cursor: "pointer", width: "20px", height: "20px", fontSize: "12px", display: "flex", alignItems: "center", justifyContent: "center" }}
+                  type="button"
+                >
+                  &times;
+                </button>
+              </div>
+            )}
           </div>
 
           <div className={styles.inputGroup}>

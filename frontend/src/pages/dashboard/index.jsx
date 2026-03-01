@@ -92,7 +92,23 @@ export default function DashboardComponent() {
                   id="fileUpload"
                 />
                 
-                {postContent.length > 0 && (
+                {fileContent && (
+                  <div style={{ marginLeft: "1rem", position: "relative", display: "flex", alignItems: "center" }}>
+                    {fileContent.type.startsWith("video/") ? (
+                      <video src={URL.createObjectURL(fileContent)} style={{ height: "42px", borderRadius: "8px", objectFit: "cover", width: "42px" }} />
+                    ) : (
+                      <img src={URL.createObjectURL(fileContent)} alt="preview" style={{ height: "42px", borderRadius: "8px", objectFit: "cover", width: "42px" }} />
+                    )}
+                    <button 
+                      onClick={() => setFileContent(null)}
+                      style={{ position: "absolute", top: "-5px", right: "-5px", background: "red", color: "white", borderRadius: "50%", border: "none", cursor: "pointer", width: "16px", height: "16px", fontSize: "10px", display: "flex", alignItems: "center", justifyContent: "center" }}
+                    >
+                      &times;
+                    </button>
+                  </div>
+                )}
+                
+                {(postContent.length > 0 || fileContent) && (
                   <div style={{marginLeft: "auto"}}>
                     <button onClick={handleUpload} className={styles.postButton}>
                       Post
