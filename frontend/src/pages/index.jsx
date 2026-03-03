@@ -4,7 +4,7 @@ import styles from "@/styles/Home.module.css";
 import { useRouter } from "next/router";
 import Navbar from "@/components/Navbar";
 
-const inter = Inter({ susbsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   const router = useRouter();
   return (
